@@ -1,49 +1,54 @@
 # ClearPath
 
-Aplicación móvil en desarrollo para apoyar la organización de las finanzas personales y los gastos compartidos.
+A mobile application under development to help users organize personal finances and shared expenses in Costa Rica.
 
-Proyecto académico del curso TPA-5001 Proyecto Empresarial del Técnico en Desarrollo de Aplicaciones de Software.
+Academic project for the TPA-5001 Proyecto Empresarial course in the Software Application Development technical program.
 
-## Autora
+## Author
 
 Natalia Martínez Villegas.
 
-## Estado del proyecto
+## Project Status
 
-Anteproyecto aprobado por el tutor. Actualmente se trabaja en la configuración inicial del proyecto y del repositorio.
+The project proposal has been approved by the advisor. Initial project and repository setup is currently in progress.
 
-Las funcionalidades se implementarán de acuerdo con el alcance y el cronograma del anteproyecto aprobado.
+Features will be implemented according to the scope and schedule established in the approved proposal.
 
-## Tecnologías iniciales
+## Initial Technologies
 
 - React Native.
 - Expo.
 - TypeScript.
 
-Esta sección se actualizará conforme se incorporen y configuren los demás componentes del proyecto.
+This section will be updated as additional project components are integrated and configured.
 
-## Ejecución local
+## Language Guidelines
 
-Desde la carpeta del proyecto, instalar las dependencias:
+- Source code, code comments, and project documentation are written in English.
+- User-facing text is written in Spanish for users in Costa Rica.
+
+## Local Development
+
+From the project directory, install the dependencies:
 
 ```bash
 npm install
 ```
 
-Iniciar el servidor de desarrollo:
+Start the development server:
 
 ```bash
 npx expo start
 ```
 
-## Organización de ramas
+## Branching Workflow
 
-- `master`: rama principal para las versiones verificadas.
-- `develop`: integración de los avances del proyecto.
-- `feature/...`: ramas para trabajar en cambios específicos.
+- `master`: main branch for verified versions.
+- `develop`: integration branch for project progress.
+- `feature/...`: branches for specific changes.
 
-Los cambios se realizan en una rama específica y se integran en `develop` mediante un pull request. Las versiones verificadas se integran posteriormente en `master`.
+Changes are developed in dedicated branches and merged into `develop` through pull requests. Verified versions are subsequently merged into `master`.
 
-## Documentación
+## Documentation
 
-El alcance, los objetivos y el cronograma se encuentran definidos en el anteproyecto aprobado.
+The project scope, objectives, and schedule are defined in the approved project proposal.
