@@ -1,56 +1,54 @@
-# Welcome to your Expo app 👋
+# ClearPath
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A mobile application under development to help users organize personal finances and shared expenses in Costa Rica.
 
-## Get started
+Academic project for the TPA-5001 Proyecto Empresarial course in the Software Application Development technical program.
 
-1. Install dependencies
+## Author
 
-   ```bash
-   npm install
-   ```
+Natalia Martínez Villegas.
 
-2. Start the app
+## Project Status
 
-   ```bash
-   npx expo start
-   ```
+The project proposal has been approved by the advisor. Initial project and repository setup is currently in progress.
 
-In the output, you'll find options to open the app in a
+Features will be implemented according to the scope and schedule established in the approved proposal.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+## Initial Technologies
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+- React Native.
+- Expo.
+- TypeScript.
 
-## Get a fresh project
+This section will be updated as additional project components are integrated and configured.
 
-When you're ready, run:
+## Language Guidelines
+
+- Source code, code comments, and project documentation are written in English.
+- User-facing text is written in Spanish for users in Costa Rica.
+
+## Local Development
+
+From the project directory, install the dependencies:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Start the development server:
 
-### Other setup steps
+```bash
+npx expo start
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Branching Workflow
 
-## Learn more
+- `master`: main branch for verified versions.
+- `develop`: integration branch for project progress.
+- `feature/...`: branches for specific changes.
 
-To learn more about developing your project with Expo, look at the following resources:
+Changes are developed in dedicated branches and merged into `develop` through pull requests. Verified versions are subsequently merged into `master`.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Documentation
 
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The project scope, objectives, and schedule are defined in the approved project proposal.
