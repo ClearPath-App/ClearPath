@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "ClearPath",
-    "slug": "ClearPath",
+    "name": "clearpath",
+    "slug": "clearpath",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,7 +20,7 @@
       "predictiveBackGestureEnabled": false
     },
     "web": {
-      "output": "static",
+      "output": "server",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
