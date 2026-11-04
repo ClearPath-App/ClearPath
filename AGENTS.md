@@ -2,9 +2,11 @@
 
 ## Read first
 
-Read README.md for the complete available summary of the approved project proposal, then design.md for visual guidance. The agent may not have access to the original proposal.
+Read README.md for the self-contained summary of the current project scope (based on the updated anteproyecto), then design.md for visual and interaction guidance. The agent may not have access to the anteproyecto.
 
-README.md is the functional scope authority; design.md must not expand it. This file governs implementation workflow. Inspect existing code and configuration before assuming anything is implemented.
+README.md is the functional scope authority; design.md must not expand it. This file governs working instructions and technical boundaries. Inspect existing code and configuration before assuming anything is implemented.
+
+An earlier proposal was approved with a broader scope. Do not describe the updated scope as academically approved unless README.md records that approval.
 
 If documents conflict, identify the conflict and ask a focused question rather than selecting an interpretation silently. Follow explicit current owner instructions and applicable repository policies.
 
@@ -14,31 +16,35 @@ Communicate with Natalia in English, including explanations, clarification quest
 
 Write code, identifiers, technical comments, technical documentation, commits, and pull request titles/descriptions in English. User-facing application text and the participant guide must be Spanish for Costa Rica.
 
-Explain material choices. Ask about unresolved requirements that materially affect implementation; do not invent authentication, permission, interest, or rounding rules.
+Explain material choices. Follow the owner-confirmed decisions in README.md (owner decisions, not academic approval). Ask about anything still open that materially affects implementation; do not invent authentication, invitation, permission, deletion, precision, or interest rules.
 
 ## Platform and environment
 
 The owner develops on a Lenovo running Windows with VS Code and PowerShell. Target iOS/iPhone only; Windows is the development OS, not the product platform.
 
-Do not assume Xcode or a local iOS simulator. Do not add Android work.
+Do not assume access to a Mac, Xcode, an iPhone simulator, or an Apple Developer Program membership. Do not add Android work.
+
+On-device execution uses Expo Go on real iPhones. Web preview is useful for interface review but is not an iOS test.
 
 ## Scope and priorities
 
-Committed features: personal/shared spaces and permissions; expense CRUD/classification/allocation; optional income; monthly/twice-monthly budgets; calendar/basic summaries; debts and one additional-payment simulation; local notifications; offline expenses and shared synchronization.
+Committed: individual and shared financial profiles with administrator/member roles; budget (limits by period, category, and currency; expense CRUD; used and available amounts); savings (goals, contributions, withdrawals, balance, progress); manual investment tracking (records, contributions, withdrawals, value updates, history); basic debt tracking (balance, installment, due date, payments, outstanding balance). All four modules exist in both profile types.
 
-Desirable features: recurring/less frequent expenses, savings/emergency fund, manual investments, and experimental Wallet/Shortcuts. Implement a desirable feature only when committed functionality is complete, integrated, and verified, and sufficient time remains to implement and test it without compromising corrections and documentation. Natalia's explicit authorization is also required before starting any desirable feature; this is a working agreement, not an additional academic requirement. Exception: the early, bounded Wallet/Shortcuts feasibility experiment described in README.md is a planned feasibility test in the approved proposal, separate from full implementation of that desirable feature. It may take place before all committed functionality is complete, when the appropriate task is reached, but Natalia's explicit approval is required before starting it (also a working agreement, not an additional academic requirement). The experiment does not commit the project to the complete integration.
+Desirable: income, custom categories/subcategories, payment method, expense splitting, recurring and non-monthly expenses, calendar, additional summaries/charts, reminders and local notifications, emergency-fund rules, investment performance analysis, debt interest/amortization/simulation, and shared offline operation. Start a desirable feature only when the committed core is integrated and verified, enough time remains to implement and test it without compromising corrections and documentation, and Natalia has explicitly authorized it. Do not add desirable work from week 15 onward.
 
-Deferred: bank integrations, app payments, reimbursements/settlement, automatic conversion, Android, additional currencies/languages, spreadsheets, full cloud backup, widgets, billing/premium enforcement.
+Future work, outside the academic delivery: Wallet, Shortcuts, Apple Pay automation (no early experiment), App Store publication, broad TestFlight pilot, Android, additional languages/currencies, widgets, bank connections, in-app payments, automatic investment data, reimbursement settlement, spreadsheets, full cloud backup, and billing/premium enforcement.
 
-Use README's delivery priorities to select work. Protect integration, testing, correction, and documentation time. An early feasibility experiment does not authorize full optional implementation. Build functional increments, not a separate prototype.
-
-Do not require access to the original proposal to understand already documented requirements. Request missing decisions only when necessary.
+Use README's delivery plan to select work. Protect integration, testing, correction, and documentation time. Build functional increments, not a separate prototype. A delay does not reclassify committed work as desirable; that change requires Natalia and the academic advisor.
 
 ## Technologies and API verification
 
-Preserve React Native, Expo, TypeScript, Expo Router, SQLite, Firebase Authentication, and native-persistent Cloud Firestore. Cloud Functions are conditional; evaluate necessity and costs first.
+Use React Native, Expo, TypeScript, Expo Router, expo-sqlite, and Firebase Authentication and Cloud Firestore through the **Firebase JavaScript SDK**. Only use libraries that run in Expo Go for the project's SDK. Do not write custom Swift code or custom native modules, and do not add React Native Firebase or other native-only libraries without a discussed decision.
 
-Inspect package.json and package-lock.json before changing APIs or dependencies. Consult official documentation matching installed versions for Expo, React Native, Firebase, and EAS. Do not rely on remembered APIs or assume latest docs match the project.
+Cloud Functions and paid Firebase plans are not planned. Evaluate necessity and cost, and ask Natalia, before adding any Firebase service beyond Authentication and Firestore on the free plan.
+
+Inspect package.json and package-lock.json before changing APIs or dependencies. Consult official documentation matching installed versions for Expo, React Native, and the Firebase JavaScript SDK, including how the JS SDK handles auth session persistence in React Native. Do not rely on remembered APIs or assume latest docs match the project.
+
+Expo Go supports a limited set of Expo SDK versions. Confirm early that the Expo Go available on the test iPhones runs the project's SDK, and avoid SDK changes that break that.
 
 Expo documentation:
 https://docs.expo.dev/versions/
@@ -60,53 +66,47 @@ Diagnose dependency incompatibilities before running broad fixes such as npx exp
 
 ## Architecture and data
 
-Keep route files under src/app/ using Expo Router; non-route reusable code stays outside it. Preserve existing conventions. Separate screens from financial rules, storage, and synchronization.
+Keep route files under src/app/ using Expo Router; non-route reusable code stays outside it. Preserve existing conventions. Separate screens from module rules and data access.
 
-Personal-space financial information stays in SQLite and must not be uploaded to Firebase. Shared information uses Firestore with native local persistence. Keep domain concepts coherent across storage mechanisms.
+The selected profile routes each operation: individual data to SQLite, shared data to Firestore. Individual financial data stays in SQLite and must never be read into, copied to, or synchronized with Firebase. Keep domain concepts coherent across both stores.
 
-Do not add a parallel custom synchronization queue without a demonstrated requirement and discussed design.
+The individual profile must work without an account or internet. Shared profiles require authentication and internet for creating, viewing, and modifying data.
 
-Shared offline access requires prior access and available local data. Account creation and initial shared access require internet. Do not impose mandatory online authentication for personal-only use without an explicit decision.
+Do not build shared offline support, rely on Firestore offline persistence, or add a pending-sync queue; these are desirable features. Show shared records as saved only after the server confirms the write, and use supported SDK metadata to avoid presenting unconfirmed local state as saved. Make retries idempotent with stable identifiers so movements are not duplicated. Keep a movement and its balance consistent through transactions or by deriving balances from confirmed records.
 
-Distinguish pending local writes from cloud-confirmed records using supported metadata. Do not claim that other members received a local write before synchronization. Document conflict behavior.
+## Financial rules
 
-## Financial and notification rules
+Keep CRC and USD separate; never convert or sum them together. Display one profile at a time.
 
-Keep CRC and USD totals separate; never convert or sum them together. Display one space at a time.
+Follow README's calculation rules for budget, savings, investments, and debts, and verify them with independent examples (zero movements, multiple movements, corrections, and limits). Do not add formulas beyond them, such as bank balance, net worth, returns, or interest.
 
-Income entry is optional. Do not invent available/bank balance formulas.
+Use the period start and end dates entered for a budget; do not derive periods from income or pay dates. Reject budget periods that overlap for the same category, currency, and profile. Deleting a budget never deletes its expenses.
 
-Allocation is not reimbursement settlement. Validate allocations and document monetary precision/remainder rules.
+Withdrawals cannot exceed a goal's recorded balance; investment withdrawals must be positive and cannot exceed the recorded value; payments cannot exceed a debt's outstanding balance. Debt balance adjustments are separate records (date, reason, author, amount of change) and never count as payments. Recalculate affected balances when movements are edited or deleted.
 
-Twice-monthly is not every two weeks. Define period boundaries explicitly.
+Archive, rather than delete, savings goals, investments, and debts that have movements; only empty ones can be deleted. Archived records stay viewable and reject new movements, in the UI and in storage rules.
 
-Document interest and payment assumptions before debt calculations. Show payoff results as estimates and verify independent examples.
-
-Use permission-based local notifications. Debt reminders are one day or one week before due dates. Budget alerts are at most one local notification per exceeded category limit per period. Update/cancel reminders when records change.
+Both CRC and USD use two decimal places. Store amounts in a fixed-precision form (for example, integer hundredths) and avoid floating-point arithmetic for stored values or totals.
 
 ## Security and privacy
 
-Enforce identity, membership, and permissions through Firebase Authentication and Firestore rules, not UI alone. Do not invent member roles without a decision.
+Enforce identity, membership, roles, and authorship through Firebase Authentication and Firestore rules, not UI alone. Use exactly the two roles and the permission matrix in README.md. Authorship is the authenticated account; members cannot change authorship or raise their own role. Joining requires a signed-in user with a valid invitation code; an invalidated code must be rejected by the rules. Removed members lose access, but their records and authorship are preserved. Verify rules with an administrator, a member, a removed member, and an unrelated account.
 
 Commit no secrets, private signing material, service accounts, or real financial data. Follow existing environment/ignore conventions. Use fictional data in tests and demos.
 
 Do not implement custom end-to-end encryption or user-facing cloud backup.
 
-Document SQLite integrity/transactions and Firestore collections/rules. The technical SQLite backup/restore exercise is academic validation, not a product cloud feature.
+Document SQLite integrity/transactions and Firestore collections/indexes/rules. The technical SQLite backup/restore exercise is academic validation, not a product feature.
 
 ## Builds and distribution
 
-The full native Firebase stack requires an Expo development build. Do not assume Expo Go runs the complete product.
+Development builds, EAS Build, TestFlight, and App Store distribution are not part of the planned validation. Do not configure them, create eas.json, change signing, start paid services, publish updates, or submit builds without an explicit request.
 
-Inspect app configuration and eas.json before build changes. On Windows, use a configured cloud iOS build workflow where appropriate; do not prescribe local Xcode commands.
+For Continuous Native Generation, use app configuration and plugins instead of manually creating/editing generated native directories. Do not prescribe local Xcode commands.
 
-Run EAS CLI as:
+If a build workflow is explicitly requested later, run EAS CLI as:
 
     npx eas-cli@latest <command>
-
-For Continuous Native Generation, use app configuration and plugins instead of manually creating/editing generated native directories.
-
-Test distribution and Apple signing requirements remain to be verified. App Store publication is not an assumed deliverable. Do not start paid services, publish updates, submit builds, or change signing/distribution settings without an explicit request.
 
 ## Design and business intent
 
@@ -114,7 +114,9 @@ Follow design.md tokens, proposed typography, accessible layouts, and Spanish co
 
 Navy preference is one input; product clarity, accessibility, consistency, and audience feedback guide decisions. Treat color psychology and commercial appeal as hypotheses, not guarantees of trust or sales.
 
-Do not expose optional features as available, add settlement dashboards, or imply bank access. Design must reflect actual implemented functionality.
+Earlier Stitch screens are design proposals made before the scope update, not implemented features or requirements. Do not regenerate them unless asked.
+
+Do not expose desirable or future features as available, add settlement dashboards, or imply bank access. Design must reflect actual implemented functionality.
 
 ## Git workflow
 
@@ -130,10 +132,10 @@ Do not discard others' changes, force-push, rewrite shared history, delete branc
 
 For code/configuration changes, run relevant lint/type checks and focused verification. For documentation-only changes, check Markdown and consistency; app tests are unnecessary.
 
-Test affected financial calculations, persistence, permissions, and sync behavior meaningfully. Validate real-device behavior on an iPhone when required; static checks and web previews are not iOS tests.
+Test affected calculations, persistence, permissions, connectivity errors, and retries meaningfully. Validate real-device behavior on an iPhone through Expo Go when required; static checks and web previews are not iOS tests. Link tests and results to README's requirement IDs (RF01–RF28).
 
-Support the README's 15-person usability procedure with fictional data. Preserve its success criterion and limitations without claiming market validation.
+Support README's validation plan with fictional data: the combined demonstration and guided test with 4–6 participants (aiming for at least 5) and the conditional extended test with 2–3 people. Evaluate usability and perceived usefulness separately, preserve the success criteria and limitations, and do not claim market validation.
 
 Report what changed, why, checks/results, unverified behavior, and unresolved decisions. Never claim checks passed when not run.
 
-Keep documentation synchronized with approved decisions and distinguish planned from implemented features.
+Keep documentation synchronized with agreed decisions and distinguish planned from implemented features.

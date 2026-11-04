@@ -1,34 +1,34 @@
 # ClearPath — Product Design Specification
 
 **Platform:** iPhone/iOS only  
-**Status:** Proposed visual direction, subject to validation  
+**Status:** Proposed visual direction, subject to validation; aligned with the updated scope in README.md  
 **UI:** Spanish for Costa Rica  
 **Implementation:** React Native, Expo, TypeScript, existing Expo Router  
 **Functional authority:** README.md
 
 ## 1. Product and commercial intent
 
-ClearPath helps individuals, couples, families, and groups organize expenses, budgets, and debts. The experience should make manual financial organization understandable and approachable.
+ClearPath helps individuals, couples, families, and groups organize their budget, savings, manual investment tracking, and debts, in individual and shared financial profiles. The experience should make manual financial organization understandable and approachable.
 
 Brand direction: calm, clear, competent, warm, and transparent. Proposed promise: "Tus finanzas, con un camino más claro."
 
-Commercial differentiation should come from an understandable integration of personal and shared finance, quick expense entry, and honest offline behavior. Do not imitate a bank or trading platform, imply bank connectivity, or present profitability as proven.
+Commercial differentiation should come from an understandable integration of the four modules across individual and shared profiles, quick recording, and honest connectivity states. Do not imitate a bank or trading platform, imply bank connectivity, or present profitability as proven.
 
 Color associations are contextual design hypotheses, not universal psychological effects or evidence that a palette increases sales. Validate clarity, recognition, and perceived trust with users of the working application.
 
 ## 2. Scope constraints
 
-Only expose committed modules: spaces, expenses, optional income, budgets, calendar, summaries, debts, extra-payment simulation, local notifications, and offline/shared sync states.
+Only expose committed functionality: individual and shared profiles, members and roles, budget, savings, investments, and debts.
 
-Savings goals, emergency fund, recurring/less frequent expenses, investments, and Wallet/Shortcuts remain desirable. Do not show them as available, required screens, or empty premium teasers before authorized implementation.
+Desirable features stay hidden until authorized and implemented: income, subcategories, custom categories, payment method, expense splitting, recurring expenses, calendar, additional charts, notifications, simulations, amortization, and shared offline mode. Do not show them as available, required screens, or empty premium teasers. Wallet and Shortcuts are future work.
 
-Never display settlement balances, "who owes whom," reimbursements, or settlement actions. Shared allocation and recorded debt payments are different concepts.
+Never display settlement balances, "who owes whom," reimbursements, or settlement actions.
 
 The visual system does not authorize new product requirements. Privacy masking, custom onboarding, dark mode, extra charts, and haptics are design options, not committed features.
 
 ## 3. Palette and rationale
 
-Navy anchors the brand; deep green distinguishes primary financial actions. Neutral surfaces keep forms and amounts readable. Amber highlights attention without treating every pending item as a failure. Red is reserved for errors and destructive operations.
+Navy anchors the brand; deep green distinguishes primary actions. Neutral surfaces keep forms and amounts readable. Amber highlights attention, such as an exceeded limit or an upcoming due date, without treating it as a failure. Red is reserved for errors and destructive operations.
 
 | Token | Hex | Intended role |
 | --- | --- | --- |
@@ -46,9 +46,9 @@ Navy anchors the brand; deep green distinguishes primary financial actions. Neut
 | text.inverse | #FFFFFF | Text on navy or deep green |
 | border.subtle | #DCE3EC | Decorative separators |
 | border.control | #718096 | Input boundaries when needed for visibility |
-| state.success | #166647 | Confirmed outcomes |
+| state.success | #166647 | Confirmed outcomes, such as a confirmed shared save |
 | state.successSoft | #E5F3EB | Success background |
-| state.warning | #825000 | Pending sync and upcoming due dates |
+| state.warning | #825000 | Operation in progress, exceeded limit, upcoming due date |
 | state.warningSoft | #FFF3D9 | Warning background |
 | state.danger | #B42332 | Errors and destructive actions |
 | state.dangerSoft | #FCEBED | Error background |
@@ -60,19 +60,21 @@ Navy anchors the brand; deep green distinguishes primary financial actions. Neut
 | chart.purple | #7955A0 | Category series |
 | chart.amber | #A56A16 | Category series |
 
-Use navy and green with distinct roles; do not make every card dark or every amount green. Expenses are neutral labeled amounts, not automatically red. Do not use green to imply profit or available money when only expense data exists.
+Only the state.success and state.warning role descriptions changed with the scope update; hex values are unchanged. "Pending sync" was removed because shared offline mode is no longer committed.
 
-Use a light theme as the proposed initial design direction. Dark mode is not a committed requirement of the approved proposal; adding it requires separate scope consideration and contrast verification. The template's existing dark-theme code may remain in the codebase; its presence does not require implementing dark mode.
+Use navy and green with distinct roles; do not make every card dark or every amount green. Expenses, withdrawals, and payments are neutral labeled amounts, not automatically red. Do not use green to imply profit or investment gains; recorded investment value is not a return.
+
+Use a light theme as the proposed initial design direction. Dark mode is not committed; adding it requires separate scope consideration and contrast verification. The template's existing dark-theme code may remain in the codebase; its presence does not require implementing dark mode.
 
 ## 4. Typography
 
 Proposed family: **Inter**, with the native iOS system font as fallback. Use Regular 400, Medium 500, SemiBold 600, and Bold 700.
 
-Inter is proposed for a consistent contemporary identity and readable interfaces. This is a design choice, not a claim that the font improves commercial conversion. Check current font-loading setup before introducing assets or dependencies.
+Inter is proposed for a consistent contemporary identity and readable interfaces. This is a design choice, not a claim that the font improves commercial conversion. Check current font-loading setup before introducing assets or dependencies; any font loading must work in Expo Go.
 
 | Style | Size | Weight | Line height | Use |
 | --- | --- | --- | --- | --- |
-| Metric | 32 | 700 | 40 | Main expense total |
+| Metric | 32 | 700 | 40 | Main module amount |
 | Screen title | 26 | 700 | 34 | Main screen heading |
 | Section title | 21 | 600 | 28 | Major section |
 | Card title | 18 | 600 | 25 | Card heading |
@@ -103,19 +105,20 @@ Use tabular figures where supported for amounts and percentages. Support system 
 
 Use the existing Expo Router structure; routes live under src/app/. Do not introduce an App.tsx/screens navigation architecture to implement this document.
 
-Proposed four bottom tabs:
+Flow, following the anteproyecto's navigation map: start and profile selector → individual profile, or account access → create or join a shared profile → the selected profile's four modules → list and detail, with create and edit actions according to permissions. Shared profiles also lead to member management for the administrator.
+
+Five bottom tabs, all scoped to the selected profile (owner-confirmed on 2026-11-03, replacing the earlier "Movimientos / Planificar / Compartidos" tabs):
 1. "Inicio"
-2. "Movimientos"
-3. "Planificar"
-4. "Compartidos"
+2. "Presupuesto"
+3. "Ahorros"
+4. "Inversiones"
+5. "Deudas"
 
-Use a visible "Registrar gasto" action on the "Inicio" and "Movimientos" tabs. "Planificar" provides budgets, calendar, and debts. Settings are reached through a labeled profile/settings control.
+Show a persistent profile selector where financial information is displayed. Examples: "Personal" and "Gastos del hogar". Pair a shared profile's name with an icon and label so context does not depend on color. The selector also leads to creating a shared profile or joining one with an invitation code ("Unirme con un código"). Members ("Integrantes") and settings are reached through labeled controls, not tabs. In "Integrantes", the administrator sees the current code with an "Invalidar código" action and can remove members; removing someone keeps their records and author name visible.
 
-Show a persistent space selector where financial information is displayed. Examples: "Personal" and "Gastos del hogar". Pair a shared-space name with an icon and label so context does not depend on color.
+Show one selected profile at a time. Never mix currencies into a total.
 
-Consult one selected space at a time. Never mix currencies into a total.
-
-Personal financial data is local. Do not impose an online login wall on personal use based solely on this design; the authentication flow needs an explicit product decision.
+The individual profile is local and needs no account. Do not place a login wall before individual use; request sign-in only when the person opens or creates a shared profile.
 
 Avoid adding a multi-screen onboarding sequence before core functionality. If explanations are needed, use short contextual copy.
 
@@ -123,41 +126,46 @@ Avoid adding a multi-screen onboarding sequence before core functionality. If ex
 
 Order:
 1. Greeting or neutral welcome and settings access.
-2. Selected financial space.
-3. Navy hero card: "Gastos del mes", with separate CRC/USD amounts when present.
-4. Primary "Registrar gasto" and secondary "Ver movimientos".
-5. Category budget progress.
-6. Basic category/subcategory spending summary.
-7. Upcoming debt payments, if any.
+2. Selected profile.
+3. Navy hero card: "Gastos del período" for the budget, with separate CRC/USD amounts when present.
+4. Primary "Registrar gasto".
+5. Category budget progress: used, available, or exceeded.
+6. Short summaries of savings goals, investments, and debts, each linking to its tab.
+7. Upcoming debt due dates, if any, as recorded information (no reminders).
 
-No savings preview in the committed layout. No "Disponible", "Patrimonio", or "Saldo bancario" metric without an approved, documented formula and the necessary inputs. Optional income does not establish a verified balance.
+"Disponible" may appear only as a budget's limit minus used, labeled with its category, period, and currency. No "Patrimonio", net worth, "Saldo bancario", or total combining modules or currencies. No income-based balance.
 
 Use fictional examples explicitly as development fixtures, not hardcoded production totals.
 
-## 8. Expense entry and shared information
+## 8. Recording movements
 
-Keep the form focused on approved fields: amount, currency, date, category, subcategory, payment method, and selected space.
+Expense form: amount, currency, date, and category, in the selected profile. Initial categories: "Alimentación", "Vivienda y servicios", "Transporte", "Salud", "Educación", "Entretenimiento", "Otros". No subcategory, payment method, splitting, or notes fields unless authorized.
 
-For shared expenses, show participants and allocation method:
-- "Partes iguales"
-- "Por porcentaje"
-- "Por monto"
+Savings and investment forms: amount, currency (fixed by the goal or investment), and date for contributions and withdrawals; investments also have an "Actualizar valor" action for the administrator or owner. Debt payment form: amount and date.
 
-Make the allocated total and any difference visible, with understandable validation. Define remainder/rounding rules before implementing.
+Debt balance adjustment form (administrator or owner): date, reason, and amount of change. Label it "Ajuste de saldo" and keep it visually separate from "Registrar abono"; an adjustment is never a payment.
 
-Do not add unapproved mandatory fields such as payer identity or notes without a product decision. Do not present allocated shares as reimbursement debts.
+Amount fields accept two decimal places for both CRC and USD.
 
-Show permissions honestly, including denied edits and unavailable data. Confirm deletion using the record context.
+Validate before saving with understandable Spanish messages, including withdrawals above the recorded balance or value, payments above the outstanding balance, and overlapping budget periods. A withdrawal is a record, not a transfer; word actions as "Registrar retiro" and "Registrar abono".
 
-## 9. Budgets, calendar, and debts
+In shared profiles, show each movement's author. Show permissions honestly: when a role cannot perform an action, hide it or disable it with a short explanation. Storage rules still enforce permissions.
 
-Budgets: show period, category limit, recorded expenses, and remaining or exceeded amount, separated by currency. Label progress numerically and with text; do not rely on bars alone.
+Deletion and archiving:
+- Confirm deletion using the record's context.
+- Deleting a budget states that its expenses are kept.
+- A savings goal, investment, or debt with movements offers "Archivar" instead of "Eliminar"; an empty one can be deleted.
+- Archived records appear in a separate, clearly labeled "Archivados" list, remain viewable, and show no actions for new movements.
 
-Calendar: show recorded daily expenses and debt due dates. Selecting a date opens relevant movements. Recurring bill scheduling is conditional on optional implementation.
+## 9. Module screens
 
-Debts: show entered balance, interest rate, installment, due date, and recorded payments. The simulation accepts one additional amount at a time and explains assumptions and estimated payoff results.
+**Presupuesto:** period start and end dates, category, currency, limit, used, and available or exceeded amount ("Excedido por ₡3.200"). Label progress numerically and with text; do not rely on bars alone. No notifications.
 
-Do not show decorative precision or a payoff date when the entered terms do not support a valid calculation.
+**Ahorros:** goal name, currency, target, balance, progress percentage, and contributions/withdrawals history.
+
+**Inversiones:** name, currency, "Valor registrado", date of the latest manual valuation, and history of contributions, withdrawals, and value updates. Do not label values as "rendimiento" or "ganancia", and do not show market data.
+
+**Deudas:** name, currency, initial balance, installment, due date, outstanding balance ("Saldo pendiente"), and a history that distinguishes payments ("Abono") from balance adjustments ("Ajuste de saldo", with reason and author). Installment and due date are informational. No interest rate, payoff date, amortization, or simulation.
 
 ## 10. Components
 
@@ -165,64 +173,90 @@ Primary button: green fill, white text, minimum 52 height when text scaling perm
 
 Cards: white surfaces with clear headings, relevant amounts, and restrained metadata. Prefer one primary purpose per card.
 
-Fields: persistent labels, helper/error text, visible focus, appropriate keyboard. Place currency near amount input. Accept input according to a documented locale/precision policy.
+Fields: persistent labels, helper/error text, visible focus, appropriate keyboard. Place currency near amount input. Accept input with up to two decimal places, as documented in README.md.
 
-Charts: basic summaries only. Prefer accessible horizontal bars and a labeled list before introducing complex charts. Include period, currency, category, and exact values. Do not require a new chart dependency for decorative purposes.
+Progress: basic labeled bars for budgets and savings goals, with exact values, period, and currency. Additional charts are desirable. Do not require a new chart dependency for decorative purposes.
 
 Icons: use one existing icon family with consistent stroke and size. Icons supplement text for important actions.
 
-## 11. Offline and feedback copy
+## 11. Connectivity and feedback copy
 
-Personal space:
+Individual profile:
 "Tus finanzas personales se guardan en este dispositivo."
 
-Pending shared expense:
-"Guardado en este dispositivo. Pendiente de sincronizar."
+Shared profile without connection:
+"Sin conexión. Los perfiles compartidos necesitan internet para consultar y registrar información."
 
-Offline shared information:
-"Sin conexión. Se muestra la información disponible en este dispositivo."
+Shared operation in progress:
+"Guardando…"
 
-Confirmed shared expense:
-"Sincronizado."
+Confirmed shared save:
+"Guardado."
 
-Synchronization error:
-"No se pudo sincronizar. Revisa tu conexión."
+Shared save error:
+"No se pudo guardar. Revisa tu conexión e inténtalo de nuevo."
 
 Initial shared access:
-"Necesitas conexión para crear o unirte a un espacio compartido."
+"Necesitas conexión para crear o unirte a un perfil compartido."
+
+Permission limit (example):
+"Solo el administrador puede modificar este presupuesto."
+
+Withdrawal above balance (savings):
+"El retiro no puede superar el saldo registrado."
+
+Withdrawal above value (investments):
+"El retiro no puede superar el valor registrado."
+
+Overlapping budget period:
+"Ya existe un presupuesto para esta categoría y moneda en esas fechas."
+
+Archived record:
+"Archivado. Puedes consultarlo, pero no registrar movimientos nuevos."
+
+Invalid invitation code:
+"El código no es válido o ya no está disponible."
+
+Payment above balance:
+"El abono no puede superar el saldo pendiente."
 
 Empty expenses:
-"Aquí aparecerán tus movimientos. Registra tu primer gasto."
+"Aquí aparecerán tus gastos. Registra tu primer gasto."
 
 Budget exceeded:
 "Superaste el límite de esta categoría para este período."
 
-Notifications denied:
-"Puedes activar las notificaciones en los ajustes del iPhone."
-
-A local save is not cloud confirmation. Do not hide cached content behind a blocking network loader. Avoid promises of guaranteed background delivery or instant visibility to other members.
+Show a shared record as saved only after the service confirms it. Do not show offline-pending states or promise offline shared recording. On retry, avoid creating duplicates.
 
 ## 12. Privacy and tone
 
 Use respectful, nonjudgmental language. Prefer "Superaste el límite registrado" over blame or shame.
 
-Do not expose sensitive amounts unnecessarily in reminder copy. Keep notifications concise; exact wording is a design decision to validate.
+Never imply personal cloud backup. Explain the difference between local individual storage and online shared profiles.
 
-Never imply personal cloud backup. Explain the difference between local personal storage and shared synchronization.
+If notifications are authorized later, do not expose sensitive amounts in their copy.
 
-## 13. Implementation and review
+## 13. Earlier design proposals
+
+Stitch screens created in week 4 (versions 1–3, kept as evidence in the anteproyecto) are earlier design proposals. They predate the scope update and are not implemented features or requirements. They may show elements that are now desirable or replaced, such as the "Movimientos / Planificar / Compartidos" tabs, pending-sync labels, calendar planning, or a single expense-focused home.
+
+Use them only as references for the established visual direction: navy hero card, green primary action, white cards, labeled budget progress, and the profile selector. Do not regenerate them unless asked; new screens follow this document and README.md.
+
+## 14. Implementation and review
 
 Define reusable color, typography, spacing, and radius tokens outside route files. Reuse existing project conventions rather than restructuring unrelated code.
 
 Before changing visual tokens, explain the exact values, their roles, and the reason in English. Significant changes to this proposal should be discussed, not silently introduced.
 
 Verify:
-- Selected space is obvious.
+- Selected profile is obvious.
 - CRC/USD remain separate.
-- Income is optional.
-- Only authorized implemented modules appear.
-- Shared allocation contains no settlement workflow.
-- Pending and confirmed writes are distinct.
+- Only committed, implemented modules appear.
+- Role-limited actions are hidden or explained, and rules enforce them.
+- Archived records are viewable but accept no new movements.
+- Debt adjustments are never shown as payments.
+- Shared saves appear as saved only after confirmation.
+- No settlement, bank balance, net worth, interest, or return figures.
 - All amounts derive from real records or explicitly fictional fixtures.
 - Large text, keyboard, VoiceOver, contrast, and safe areas are considered.
 - Commercial appeal remains a hypothesis to evaluate with users.
